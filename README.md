@@ -4,4 +4,5 @@
 To login into the database, use `mysql -u root -pmariadb -h 127.0.0.1`
 
 # express_sql_crud
-School project: Express + SQL CRUD (MariaDB).
+School project: Express + SQL CRUD (MariaDB)
+mariadb -h 127.0.0.1 -u root -p
