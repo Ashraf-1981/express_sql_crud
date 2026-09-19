@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Cuisine</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Edit Cuisine</h1>
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Cuisine Name</label>
+                <input type="text" name="name" class="form-control" value="<%= cuisine.name %>">
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+            // I don't want to save anything, just take me back to the list
+            <a href="/cuisines" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

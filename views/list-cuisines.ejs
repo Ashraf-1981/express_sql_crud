@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cuisines</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Cuisines</h1>
+        <a href="/cuisines/create" class="btn btn-primary mb-3">Add Cuisine</a>
+
+        <ul class="list-group">
+            <% cuisines.forEach(function(c) { %>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <%= c.name %>
+                    <div>
+                        <a href="/cuisines/<%= c.cuisine_id %>/edit" class="btn btn-sm btn-warning">Edit</a>
+
+                    <!--Add a delete button that sends a POST request to delete the cuisine -->
+                        <form action="/cuisines/<%= c.cuisine_id %>/delete" method="POST" style="display:inline">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+</body>
+</html>
