@@ -1,5 +1,5 @@
-create database express_sql_crud;
-use express_sql_crud;
+create database recipes;
+use recipes;
 
 -- cuisines--
 create table cuisines(
