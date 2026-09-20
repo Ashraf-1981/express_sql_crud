@@ -144,6 +144,53 @@ app.post('/recipes/create', async function (req, res) {
 });
 
 
+// Search recipes
+app.get('/search/recipes', async function (req, res) {
+    const { title, cuisine_id, date_created, last_updated } = req.query;
+
+    // query builder pattern
+    let query = `SELECT * FROM recipes
+        JOIN cuisines ON recipes.cuisine_id = cuisines.cuisine_id
+        JOIN users ON recipes.user_id = users.user_id
+        WHERE 1
+    `;
+    const bindings = [];
+
+    if (title) {
+        query += " AND recipes.title LIKE ?";
+        bindings.push("%" + title + "%");
+    }
+    if (cuisine_id) {
+        query += " AND recipes.cuisine_id = ?";
+        bindings.push(cuisine_id);
+    }
+    if (date_created) {
+        query += " AND DATE(recipes.date_created) = ?";
+        bindings.push(date_created);
+    }
+    if (last_updated) {
+        query += " AND DATE(recipes.last_updated) = ?";
+        bindings.push(last_updated);
+    }
+
+    
+    const results = await dbConnection.execute({
+        sql: query,
+        values: bindings,
+        nestTables: true
+    });
+    const rows = results[0];
+
+    const [cuisines] = await dbConnection.execute("SELECT * FROM cuisines");
+
+    res.render('search-recipes', {
+        results: rows,
+        cuisines: cuisines,
+        values: req.query
+    });
+});
+
+
 // 'U' show edit recipe form
 app.get('/recipes/:id/edit', async function (req, res) {
     const id = req.params.id;
@@ -190,7 +237,7 @@ app.get('/confirm_delete_recipe/:id', async function (req, res) {
 app.post('/confirm_delete_recipe/:id', async function (req, res) {
     const id = req.params.id;
     const sql = "DELETE FROM recipes WHERE recipe_id = ?";
-    
+
     await dbConnection.execute(sql, [id]);
     res.redirect('/recipes');
 });
@@ -200,5 +247,5 @@ app.post('/confirm_delete_recipe/:id', async function (req, res) {
 
 app.listen(port, function () {
     // console.log(`Server has started on port ${port}`);
-    console.log(`Server has started on port ${port} — v2`);
+    console.log(`Server has started on port ${port}`);
 });

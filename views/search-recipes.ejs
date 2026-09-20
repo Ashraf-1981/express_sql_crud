@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search Recipes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Search</h1>
+        <form method="GET">
+            <div class="mb-3">
+                <label class="form-label">Title</label>
+                <input class="form-control" type="text" name="title"
+                       value="<%= values.title || '' %>">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Cuisine</label>
+                <select name="cuisine_id" class="form-select">
+                    <option value="">-- Any --</option>
+                    <% cuisines.forEach(function(c) { %>
+                        <option value="<%= c.cuisine_id %>"
+                            <%= values.cuisine_id == c.cuisine_id ? "selected" : "" %>>
+                            <%= c.name %>
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Date Created</label>
+                <input class="form-control" type="date" name="date_created"
+                       value="<%= values.date_created || '' %>">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Last Updated</label>
+                <input class="form-control" type="date" name="last_updated"
+                       value="<%= values.last_updated || '' %>">
+            </div>
+
+            <input type="submit" value="Search" class="btn btn-primary" />
+            <a href="/search/recipes" class="btn btn-secondary">Reset</a>
+        </form>
+
+        <h2 class="mt-4"><%= results.length %> result(s)</h2>
+
+        <ul class="list-group">
+            <% results.forEach(function(r) { %>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong><%= r.recipes.title %></strong><br>
+                        <small class="text-muted">
+                            Cuisine: <%= r.cuisines.name %> |
+                            By: <%= r.users.email %> |
+                            Created: <%= r.recipes.date_created.toLocaleDateString("en-SG") %> |
+                            Updated: <%= r.recipes.last_updated.toLocaleDateString("en-SG") %>
+                        </small>
+                    </div>
+                    <div>
+                        <a href="/recipes/<%= r.recipes.recipe_id %>/edit" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="/confirm_delete_recipe/<%= r.recipes.recipe_id %>" class="btn btn-sm btn-danger">Delete</a>
+                    </div>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+</body>
+</html>
