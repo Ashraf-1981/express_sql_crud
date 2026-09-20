@@ -144,6 +144,57 @@ app.post('/recipes/create', async function (req, res) {
 });
 
 
+// 'U' show edit recipe form
+app.get('/recipes/:id/edit', async function (req, res) {
+    const id = req.params.id;
+
+    const [recipes] = await dbConnection.execute(
+        "SELECT * FROM recipes WHERE recipe_id = ?",
+        [id]
+    );
+    const [cuisines] = await dbConnection.execute("SELECT * FROM cuisines");
+    const [users] = await dbConnection.execute("SELECT * FROM users");
+
+    res.render('edit-recipes', {
+        recipe: recipes[0],
+        cuisines: cuisines,
+        users: users
+    });
+});
+
+// 'U' save recipe changes
+app.post('/recipes/:id/edit', async function (req, res) {
+    const id = req.params.id;
+    const { title, instructions, cuisine_id, user_id } = req.body;
+    const sql = `UPDATE recipes
+                 SET title = ?, instructions = ?, cuisine_id = ?, user_id = ?
+                 WHERE recipe_id = ?`;
+    await dbConnection.execute(sql, [title, instructions, cuisine_id, user_id, id]);
+    res.redirect('/recipes');
+});
+
+
+// 'D' show confirm delete recipe page
+app.get('/confirm_delete_recipe/:id', async function (req, res) {
+    const id = req.params.id;
+    const [rows] = await dbConnection.execute(
+        "SELECT * FROM recipes WHERE recipe_id = ?",
+        [id]
+    );
+    res.render('confirm_delete_recipe', {
+        recipe: rows[0]
+    });
+});
+
+// 'D' actually delete recipe
+app.post('/confirm_delete_recipe/:id', async function (req, res) {
+    const id = req.params.id;
+    const sql = "DELETE FROM recipes WHERE recipe_id = ?";
+    
+    await dbConnection.execute(sql, [id]);
+    res.redirect('/recipes');
+});
+
 
 
 
