@@ -7,8 +7,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+    <%- include('partials/navbar') %>
     <div class="container mt-4">
-        <h1>Search</h1>
+        <h2>Search</h2>
         <form method="GET">
             <div class="mb-3">
                 <label class="form-label">Title</label>
@@ -30,6 +31,8 @@
             </div>
 
             <div class="mb-3">
+
+                <!-- Calender dropdown-->
                 <label class="form-label">Date Created</label>
                 <input class="form-control" type="date" name="date_created"
                        value="<%= values.date_created || '' %>">
