@@ -1,4 +1,3 @@
-console.log("VERSION 2 LOADED");
 
 const express = require('express');
 const mysql2 = require('mysql2/promise');
@@ -79,14 +78,27 @@ app.post('/cuisines/:id/edit', async function (req, res) {
     res.redirect('/cuisines');
 });
 
-// 'D' delete a cuisine
-app.post('/cuisines/:id/delete', async function (req, res) {
-     console.log("DELETE ROUTE HIT, id =", req.params.id);
+
+// 'D' show confirm delete page
+app.get('/confirm_delete_cuisine/:id', async function (req, res) {
+    const id = req.params.id;
+    const [rows] = await dbConnection.execute(
+        "SELECT * FROM cuisines WHERE cuisine_id = ?",
+        [id]
+    );
+    res.render('confirm_delete_cuisine', {
+        cuisine: rows[0]
+    });
+});
+
+// 'D' actually delete
+app.post('/confirm_delete_cuisine/:id', async function (req, res) {
     const id = req.params.id;
     const sql = "DELETE FROM cuisines WHERE cuisine_id = ?";
     await dbConnection.execute(sql, [id]);
     res.redirect('/cuisines');
 });
+
 
 
 
