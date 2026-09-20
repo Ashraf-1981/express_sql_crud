@@ -31,7 +31,7 @@ const dbConnection = mysql2.createPool(dbConfig);
 
 
 // ==========================================
-// Routes
+// Cuisines routes (Task 8)
 // ==========================================
 
 // Students add their routes here.
@@ -97,6 +97,30 @@ app.post('/confirm_delete_cuisine/:id', async function (req, res) {
     const sql = "DELETE FROM cuisines WHERE cuisine_id = ?";
     await dbConnection.execute(sql, [id]);
     res.redirect('/cuisines');
+});
+
+
+// ==========================================
+// Recipes routes (Task 9)
+// ==========================================
+
+// 'R' list all recipes
+app.get('/recipes', async function (req, res) {
+    const sql = `SELECT * FROM recipes
+        JOIN cuisines ON recipes.cuisine_id = cuisines.cuisine_id
+        JOIN users ON recipes.user_id = users.user_id
+    `;
+
+    const results = await dbConnection.execute({
+        sql: sql,
+        nestTables: true
+    });
+
+    const rows = results[0];
+
+    res.render('list-recipes', {
+        recipes: rows
+    });
 });
 
 
