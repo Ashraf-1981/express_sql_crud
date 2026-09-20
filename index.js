@@ -123,10 +123,31 @@ app.get('/recipes', async function (req, res) {
     });
 });
 
+// 'C' show create recipe form
+app.get('/recipes/create', async function (req, res) {
+    const [cuisines] = await dbConnection.execute("SELECT * FROM cuisines");
+    const [users] = await dbConnection.execute("SELECT * FROM users");
+
+    res.render('create-recipes', {
+        cuisines: cuisines,
+        users: users
+    });
+});
+
+// 'C' process form and insert new recipe
+app.post('/recipes/create', async function (req, res) {
+    const { title, instructions, cuisine_id, user_id } = req.body;
+    const sql = `INSERT INTO recipes (title, instructions, cuisine_id, user_id)
+                 VALUES (?, ?, ?, ?)`;
+    await dbConnection.execute(sql, [title, instructions, cuisine_id, user_id]);
+    res.redirect('/recipes');
+});
+
 
 
 
 
 app.listen(port, function () {
-    console.log(`Server has started on port ${port}`);
+    // console.log(`Server has started on port ${port}`);
+    console.log(`Server has started on port ${port} — v2`);
 });
